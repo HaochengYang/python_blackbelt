@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>-- TB -- | {{ trip.destination }}</title>
+</head>
+<body>
+    <a href="{% url 'travel_buddy:index' %}">Home</a>
+    <a href="{% url 'travel_buddy:logout' %}">Logout</a>
+    <h2>{{ trip.destination }}</h2>
+    <p>Planned By: {{ trip.planner.name }}</p>
+    <p>Description: {{ trip.description }}</p>
+    <p>From: {{ trip.start_date }}</p>
+    <p>To: {{ trip.end_date }}</p>
+    <h2>People Attending This Trip:</h2>
+    {% for user in attendees %}
+    <p>{{ user.name }}</p>
+    {% endfor %}
+</body>
+</html>

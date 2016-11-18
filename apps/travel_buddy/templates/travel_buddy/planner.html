@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>-- TB -- | Planner</title>
+</head>
+<body>
+    <a href="{% url 'travel_buddy:index' %}">Home</a>
+    <a href="{% url 'travel_buddy:logout' %}">Logout</a>
+    <h2>Trip Planner</h2>
+    <form action="{% url 'travel_buddy:add_trip' %}" method="POST">
+        {% csrf_token %}
+        <p>Destination: <input type="text" name="destination"></p>
+        <p>Description: <input type="text" name="description"></p>
+        <p>From: <input type="date" name="start_date"></p>
+        <p>To: <input type="date" name="end_date"></p>
+        <input type="submit" value="Add Trip">
+    </form>
+    {% if messages %}
+        {% for message in messages %}
+            <h5>{{ message }}</h5>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
