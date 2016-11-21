@@ -9,13 +9,13 @@ class TripManager(models.Manager):
         errors = self.trip_validations(request)
 
         if errors:
-            return (False, errors)
+            return errors
 
         user = User.objects.get(id=request.session['user']['user_id'])
 
         Trip.objects.create(destination=request.POST['destination'], description=request.POST['description'], start_date=request.POST['start_date'], end_date=request.POST['end_date'], planner=user)
 
-        return (True, errors)
+        return errors
 
     def join_trip(self, request, id):
         user = User.objects.get(id=request.session['user']['user_id'])
@@ -27,15 +27,26 @@ class TripManager(models.Manager):
     def trip_validations(self, request):
         errors = []
         
-        try:
-            start_date = parse_date(request.POST['start_date']).date()
-            end_date = parse_date(request.POST['end_date']).date()
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+
+        if start_date:
+            start_date = parse_date(start_date).date()
             if start_date < date.today():
                 errors.append('Start date must be today or in the future.')
+        else:
+            errors.append('Please add a start date.')
+
+        if end_date:
+            end_date = parse_date(end_date).date()
+            if end_date < date.today():
+                errors.append('End date must be today or in the future.')
+        else:
+            errors.append('Please add an end date.')
+
+        if start_date and end_date:
             if start_date > end_date:
                 errors.append('End date must be after or the same as start date.')
-        except ValueError:
-            errors.append('Please add a start and end date.')
             
         if not request.POST['destination']:
             errors.append('Please add a destination.')

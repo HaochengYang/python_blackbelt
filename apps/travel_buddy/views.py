@@ -28,10 +28,10 @@ def planner(request):
 def add_trip(request):
     if session_check(request):
         
-        result = Trip.objects.add_trip(request)
+        errors = Trip.objects.add_trip(request)
 
-        if result[0] == False:
-            print_errors(request, result[1])
+        if errors:
+            print_errors(request, errors)
             return redirect('travel_buddy:planner')
         
         return redirect('travel_buddy:index')
