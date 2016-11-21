@@ -26,26 +26,17 @@ class TripManager(models.Manager):
 
     def trip_validations(self, request):
         errors = []
-        print '*'*80
-        print request.POST['start_date']
-        print request.POST['end_date']
-        print '*'*80
-
+        
         try:
             start_date = parse_date(request.POST['start_date']).date()
             end_date = parse_date(request.POST['end_date']).date()
+            if start_date < date.today():
+                errors.append('Start date must be today or in the future.')
+            if start_date > end_date:
+                errors.append('End date must be after or the same as start date.')
         except ValueError:
             errors.append('Please add a start and end date.')
-            if not request.POST['destination']:
-                errors.append('Please add a destination.')
-            if not request.POST['description']:
-                errors.append('Please add a description.')
-            return errors
             
-        if start_date < date.today():
-            errors.append('Start date must be today or in the future.')
-        if start_date > end_date:
-            errors.append('End date must be after or the same as start date.')
         if not request.POST['destination']:
             errors.append('Please add a destination.')
         if not request.POST['description']:
